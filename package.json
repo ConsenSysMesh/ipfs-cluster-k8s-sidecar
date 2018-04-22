@@ -1,0 +1,41 @@
+{
+  "name": "ipfs-cluster-k8s-sidecar",
+  "version": "0.1.0",
+  "description": "Kubernetes sidecar for ipfs-cluster",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "forever src/index.js",
+    "watch": "forever -w src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joshorig/ipfs-cluster-k8s-sidecar.git"
+  },
+  "keywords": [
+    "kubernetes",
+    "k8s",
+    "ipfs",
+    "ipfs-cluster",
+    "sidecar",
+    "docker"
+  ],
+  "author": "Joshua Cassidy <joshua.cassidy@consensys.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joshorig/ipfs-cluster-k8s-sidecar/issues"
+  },
+  "homepage": "https://github.com/joghorig/ipfs-cluster-k8s-sidecar",
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "mocha": "^2.2.4"
+  },
+  "dependencies": {
+    "forever": "^0.14.1",
+    "ip": "^0.3.2",
+    "k8s": "^0.4.15",
+    "moment": "^2.10.2",
+    "node-kubernetes-client": "^0.2.2",
+    "pem": "^1.9.4",
+    "superagent": "^3.8.2"
+  }
+}
