@@ -11,7 +11,7 @@ This is pre-alpha software and should not be used in a production environment
 
 Currently managing addition of new nodes to the cluster works.
 
-Nodes are not currently removed from the cluster.
+Nodes are not currently removed from the cluster. (With a persistent store nodes will rejoin the cluster with their newly assigned IP). If not using a persistent store we will have to remove the node from the cluster.
 
 ## How to use it
 
@@ -35,6 +35,7 @@ There you will also find some helper scripts to test out creating the replica se
 
 ## Still to do
 
+- Add cluster removal
 - Add SSL support
 - Add tests!
 - Add to travisCI
