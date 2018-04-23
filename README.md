@@ -5,6 +5,14 @@ resilient to the various conditions both ipfs-cluster and kubernetes can find th
 
 This project was inspired by and references https://github.com/cvallance/mongo-k8s-sidecar
 
+## Note
+
+This is pre-alpha software and should not be used in a production environment
+
+Currently managing addition of new nodes to the cluster works.
+
+Nodes are not currently removed from the cluster.
+
 ## How to use it
 
 The docker image is hosted on docker hub and can be found here:
@@ -22,7 +30,6 @@ There you will also find some helper scripts to test out creating the replica se
 | KUBE_NAMESPACE | NO |  | The namespace to look up pods in. Not setting it will search for pods in all namespaces. |
 | IPFSCLUSTER_SIDECAR_POD_LABELS | YES |  | This should be a be a comma separated list of key values the same as the podTemplate labels. See above for example. |
 | IPFSCLUSTER_SIDECAR_SLEEP_SECONDS | NO | 5 | This is how long to sleep between work cycles. |
-| IPFSCLUSTER_SIDECAR_UNHEALTHY_SECONDS | NO | 15 | This is how many seconds a replica set member has to get healthy before automatically being removed from the replica set. |
 | IPFSCLUSTER_PORT | NO | 9094 | Configures the ipfs-cluster port, allows the usage of non-standard ports. |
 
 

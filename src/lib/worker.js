@@ -56,6 +56,16 @@ var workloop = function workloop() {
       }
     }
 
+    console.log("Running K8s peer cluster pods:")
+    info.pods.map(pod => {
+      console.log(pod.status.podIP+": "+pod.metadata.name)
+    })
+
+    console.log("Current ipfs-cluster node peers:")
+    info.peers.map(peer => {
+      console.log(peer.peername+": "+peer.id)
+    })
+
     var peerCheckResults = checkPeers(info.peers,info.pods);
     console.log(peerCheckResults)
 
@@ -77,8 +87,12 @@ var workloop = function workloop() {
           peerToRemove => {
             if(peerToRemove && peerToRemove.addresses)
             {
-              console.log("Removing peer: "+peerToRemove.addresses)
-              ipfsclusterAPI.removePeer(peerToRemove.id)
+              //console.log("Removing peer: "+peerToRemove.id)
+              /*
+              https://github.com/ConsenSys/ipfs-cluster-k8s-sidecar/issues/2
+              Currenly do not remove the node, since removing would require also cleaning up the ipfs-cluster/data
+              */
+              //ipfsclusterAPI.removePeer(peerToRemove.id)
             }
           }
         ))
