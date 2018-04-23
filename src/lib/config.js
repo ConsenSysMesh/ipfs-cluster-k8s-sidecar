@@ -81,18 +81,6 @@ var getIPFSClusterPort = function() {
   return ipfsClusterPort;
 };
 
-/**
- *  @returns boolean to define the RS as a configsvr or not. Default is false
- */
-var isConfigRS = function() {
-  var configSvr = (process.env.CONFIG_SVR || '').trim().toLowerCase();
-  var configSvrBool = /^(?:y|yes|true|1)$/i.test(configSvr);
-  if (configSvrBool) {
-    console.log("ReplicaSet is configured as a configsvr");
-  }
-
-  return configSvrBool;
-};
 
 /**
  * @returns boolean
@@ -114,6 +102,5 @@ module.exports = {
   k8sROServiceAddress: getk8sROServiceAddress(),
   k8sIPFSClusterServiceName: getK8sIPFSClusterServiceName(),
   k8sClusterDomain: getK8sClusterDomain(),
-  ipfsClusterPort: getIPFSClusterPort(),
-  isConfigRS: isConfigRS(),
+  ipfsClusterPort: getIPFSClusterPort()
 };

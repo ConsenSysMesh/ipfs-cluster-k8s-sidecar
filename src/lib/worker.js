@@ -47,8 +47,8 @@ var workloop = function workloop() {
     }
 
     console.log("Connected to cluster node: "+info.clusterNodeDetails.id+" at IP: "+config.podIP)
-    //console.log(info)
-    //Lets remove any pods that aren't running or haven't been assigned an IP address yet
+
+    //Lets remove the current pod and any pods that aren't running or haven't been assigned an IP address yet
     for (var i = info.pods.length - 1; i >= 0; i--) {
       var pod = info.pods[i];
       if (pod.status.phase !== 'Running' || !pod.status.podIP || pod.status.podIP === config.podIP) {
@@ -65,26 +65,50 @@ var workloop = function workloop() {
     .then(peersToAddDetails => {
       Promise.all(peersToAddDetails.map(
         peerToAdd => {
-          console.log("Adding peer: "+peerToAdd.addresses[1])
-          ipfsclusterAPI.addPeer(peerToAdd.addresses[1])
+          if(peerToAdd && peerToAdd.addresses)
+          {
+            console.log("Adding peer: "+peerToAdd.addresses[1])
+            ipfsclusterAPI.addPeer(peerToAdd.addresses[1])
+          }
         }
       ))
       .then(results => {
         Promise.all(peerCheckResults.peersToRemove.map(
           peerToRemove => {
-            console.log("Removing peer: "+peerToRemove.id)
-            ipfsclusterAPI.removePeer(peerToRemove.id)
+            if(peerToRemove && peerToRemove.addresses)
+            {
+              console.log("Removing peer: "+peerToRemove.addresses)
+              ipfsclusterAPI.removePeer(peerToRemove.id)
+            }
           }
         ))
         .then(results => {
           finish(null)
         })
+        .catch(err => {
+          finish(err)
+        })
       })
+      .catch(err => {
+        finish(err)
+      })
+    })
+    .catch(err => {
+      finish(err)
     })
 
 
   })
 };
+
+var isHostIPInPeerList = function(hostIp,peer)
+{
+  if(peer.addresses.length > 0)
+  {
+    return peer.addresses[1].indexOf(hostIp) > -1 || peer.addresses[0].indexOf(hostIp) > -1
+  }
+  return false;
+}
 
 var checkPeers = function(peers,pods) {
   var peersToAdd = [];
@@ -93,12 +117,9 @@ var checkPeers = function(peers,pods) {
   pods.map(pod => {
     var found = false
     peers.map(peer => {
-      if(peer.addresses.length > 0)
+      if(isHostIPInPeerList(pod.status.podIP,peer))
       {
-        if(peer.addresses[1].indexOf(pod.status.podIP) > -1)
-        {
-          found = true
-        }
+        found = true
       }
     })
     if(!found)
@@ -110,17 +131,17 @@ var checkPeers = function(peers,pods) {
   peers.map(peer => {
     var found = false
     pods.map(pod => {
-      if(peer.addresses.length > 0)
+      if(isHostIPInPeerList(pod.status.podIP,peer))
       {
-        if(peer.addresses[1].indexOf(pod.status.podIP) > -1 || pod.status.podIP === config.podIP)
-        {
-          found = true
-        }
+        found = true
       }
     })
     if(!found)
     {
-      peersToRemove.push(peer.addresses[1])
+      if(!isHostIPInPeerList(config.podIP,peer))
+      {
+        peersToRemove.push(peer)
+      }
     }
   })
 
@@ -133,8 +154,6 @@ var finish = function(err) {
   }
   setTimeout(workloop, loopSleepSeconds * 1000);
 };
-
-
 
 module.exports = {
   init: init,

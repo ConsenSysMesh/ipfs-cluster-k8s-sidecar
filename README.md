@@ -24,8 +24,6 @@ There you will also find some helper scripts to test out creating the replica se
 | IPFSCLUSTER_SIDECAR_SLEEP_SECONDS | NO | 5 | This is how long to sleep between work cycles. |
 | IPFSCLUSTER_SIDECAR_UNHEALTHY_SECONDS | NO | 15 | This is how many seconds a replica set member has to get healthy before automatically being removed from the replica set. |
 | IPFSCLUSTER_PORT | NO | 9094 | Configures the ipfs-cluster port, allows the usage of non-standard ports. |
-| KUBERNETES_IPFSCLUSTER_SERVICE_NAME | NO |  | This should point to the IPFSCkuster Kubernetes (headless) service that identifies all the pods. It is used for setting up the DNS configuration for the ipfs-cluster pods, instead of the default pod IPs. Works only with the StatefulSets' stable network ID. |
-| KUBERNETES_CLUSTER_DOMAIN | NO | cluster.local | This allows the specification of a custom cluster domain name. Used for the creation of a stable network ID of the k8s ipfs-cluster   pods. An example could be: "kube.local". |
 
 
 ## Still to do
