@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ipfs-dev-test
+  labels:
+    app: ipfs
+    release: ipfs-dev-test
+spec:
+  ports:
+  - port: 5001
+    targetPort: 5001
+    protocol: TCP
+    name: api
+  - port: 8080
+    targetPort: 8080
+    name: gateway
+  - port: 9094
+    targetPort: 9094
+    name: cluster-api
+  - port: 9095
+    targetPort: 9095
+    name: cluster-gateway
+  - port: 9096
+    targetPort: 9096
+    name: cluster-tcp
+    protocol: TCP
+  selector:
+    app: ipfs
+    release: ipfs-dev-test

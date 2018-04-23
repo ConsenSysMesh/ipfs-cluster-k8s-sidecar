@@ -1,0 +1,67 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: ipfs
+  labels:
+    app: ipfs
+    release: ipfs-dev-test
+spec:
+  replicas: 2
+  serviceName: ipfs-dev-test
+  template:
+    metadata:
+      labels:
+        app: ipfs
+        release: ipfs-dev-test
+    spec:
+      containers:
+      - name: ipfs
+        image: ipfs/go-ipfs:v0.4.12
+        ports:
+        - containerPort: 5001
+          name: api
+        - containerPort: 8080
+          name: gateway
+        volumeMounts:
+          - name: ipfs-storage
+            mountPath: /data/ipfs
+      - name: ipfs-cluster
+        image: ipfs/ipfs-cluster
+        env:
+        - name: CLUSTER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: ipfs-cluster-secret
+              key: CLUSTER_SECRET
+        - name: IPFS_API
+          value: /ip4/127.0.0.1/tcp/5001
+        ports:
+        - containerPort: 9094
+          name: api
+        - containerPort: 9095
+          name: gateway
+        - containerPort: 9096
+          name: tcp
+        volumeMounts:
+          - name: ipfs-storage
+            mountPath: /data/ipfs-cluster
+      - name: ipfs-cluster-sidecar
+        image: joshorig/ipfs-cluster-k8s-sidecar
+        env:
+          - name: IPFSCLUSTER_SIDECAR_POD_LABELS
+            value: "app=ipfs,release=ipfs-dev-test"
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+
+  volumeClaimTemplates:
+    - metadata:
+        name: ipfs-storage
+        annotations:
+          volume.beta.kubernetes.io/storage-class: "slow"
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2Gi
